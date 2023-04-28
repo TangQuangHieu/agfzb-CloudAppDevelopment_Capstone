@@ -16,7 +16,7 @@
                 {% if user.is_authenticated %}
                 <li>
                     <a class="btn btn-link" href="#">{{user.first_name}}({{user.username}})</a>
-                    <a class="btn btn-link" href="{% url 'django:logout' %}">Logout</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
                 </li>
                 {% else %}
                 <li>
@@ -39,6 +39,10 @@
     <h1>
         Welcome to Best Cars dealership, home to the best cars in North America. We sell domestic and imported cars at reasonable prices.
     </h1>
+    <footer class="container-fluid text-center" style="{background-color: #f2f2f2;
+        padding: 25px;}">
+        <a class="navbar-brand" href="{% url 'djangoapp:contact' %}">Contact</a>
+    </footer>
 </body>
 
  

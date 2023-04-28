@@ -8,64 +8,50 @@
         <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
     </head>
     <body>
-        <div class="container">
-            <h2 class="text-center">Contact Form</h2>
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-6 pb-5">
-        
-        
-                            <!--Form with header-->
-        
-                            <form action="{% url 'djangoapp:contact' %}" method="post">
-                                <div class="card border-primary rounded-0">
-                                    <div class="card-header p-0">
-                                        <div class="bg-info text-white text-center py-2">
-                                            <h3><i class="fa fa-envelope"></i> Contactor</h3>
-                                            <p class="m-0">Feel free to contact with us anytime</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-body p-3">
-        
-                                        <!--Body-->
-                                        <div class="form-group">
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text"><i class="fa fa-user text-info"></i></div>
-                                                </div>
-                                                <input type="text" class="form-control" id="formdata" name="username" placeholder="Your username" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text"><i class="fa fa-envelope text-info"></i></div>
-                                                </div>
-                                                <input type="email" class="form-control" id="formdata" name="email" placeholder="@gmail.com" required>
-                                            </div>
-                                        </div>
-        
-                                        <div class="form-group">
-                                            <div class="input-group mb-2">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text"><i class="fa fa-comment text-info"></i></div>
-                                                </div>
-                                                <textarea class="form-control" placeholder="Your message" required></textarea>
-                                            </div>
-                                        </div>
-        
-                                        <div class="text-center">
-                                            <input type="submit" value="Submit" class="btn btn-info btn-block rounded-0 py-2">
-                                        </div>
-                                    </div>
-        
-                                </div>
-                            </form>
-                            <!--Form with header-->
-        
-        
-                        </div>
+        <nav class="navbar navbar-light bg=light">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Home</a>
+                    <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a class="btn btn-link" href="#">{{user.first_name}}({{user.username}})</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Username" name="username">
+                                <input type="password" class="form-control" placeholder="Username" name="psw">
+                                <button class="btn btn-primary" type="submit">Login</button>
+                                <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                            </div>
+                        </form>
+
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+        <div class="name">
+            Hieu Tang
+            <div class="contact_info">
+                <img src= "../../static/media/emoji/envelope.png" alt="https://icons8.com/icon/124377/circled-envelope"/>
+                hieutq11xxx@gmail.com
+            </div>
+            <div style="clear:both;"></div>
+            <div class="contact_info">
+                <img src="../../static/media/emoji/phone.png" alt="https://icons8.com/icon/124377/circled-envelope"/>
+                +84012345678
             </div>
         </div>
-           
+        <footer class="container-fluid text-center" style="{background-color: #f2f2f2;
+            padding: 25px;}">
+            <a class="navbar-brand" href="#">Contact</a>
+        </footer>
     </body>
 </html>
