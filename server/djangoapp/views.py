@@ -38,10 +38,11 @@ def login_request(request):
         password = request.POST['psw']
         user = authenticate(username=username,password = password)
         if user is not None:
+            login(request, user)
             return redirect('djangoapp:index')
         else:
             context['message']="Invalid username or password."
-            return render('djangoapp/login.html')
+            return render(request,'djangoapp/login.html',context)
     else:
         return render(request,'djangoapp/login.html',context)
 
