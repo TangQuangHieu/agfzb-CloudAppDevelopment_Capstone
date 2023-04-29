@@ -3,6 +3,7 @@
 Returns:
     List: List of reviews for the given dealership
 """
+import cloudant
 from cloudant.client import Cloudant
 from cloudant.error import CloudantException
 import requests
@@ -24,12 +25,60 @@ def main(param_dict):
             api_key=param_dict["IAM_API_KEY"],
             connect=True,
         )
-        print(f"Databases: {client.all_dbs()}")
+        
+        # Open an existing database
+        db = cloudant.database.CloudantDatabase(client,"reviews")
+        if param_dict.get("__ow_method")=='post':
+            review = param_dict.get("review")
+            dealer_id = review.get('id')
+            for doc in db:
+                if doc['id']==dealer_id:
+                    doc['another']=review['another']
+                    doc['car_make']=review['car_make']
+                    doc['car_model']=review['car_model']
+                    doc['car_year']=int(review['car_year'])
+                    doc['dealership']=int(review['dealership'])
+                    doc['name']=review['name']
+                    doc['purchase']=review['purchase']
+                    doc['purchase_date']=review['purchase_date']
+                    doc['review']=review['review']
+                    doc.save()
+                    return {
+                    'statusCode': 200,
+                    'body': ["Review updated!",doc]
+                    } 
+            db.create_document(review)
+            results=[]
+            for doc in db:
+                results.append(doc)
+            return {
+                'statusCode': 200,
+                    'body': ["Review added!",results]
+            }
+        else:
+            dealer_id = param_dict.get('dealerId')
+            results=[]
+            for doc in db:
+                #print(document)
+                if dealer_id is None:
+                    results.append(doc)
+                elif str(doc['id'])==dealer_id:
+                    results.append(doc)
+            return {
+                'statusCode': 200,
+                'body': results
+            }
     except CloudantException as cloudant_exception:
         print("unable to connect")
-        return {"error": cloudant_exception}
+        return {
+        'statusCode': 404,
+        'body': "Cloud error",
+        }
     except (requests.exceptions.RequestException, ConnectionResetError) as err:
         print("connection error")
-        return {"error": err}
+        return {
+        'statusCode': 404,
+        'body': "Connection error",
+        }
 
-    return {"dbs": client.all_dbs()}
+    
