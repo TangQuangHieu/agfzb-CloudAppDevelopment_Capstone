@@ -87,10 +87,11 @@ def get_dealerships(request):
         url="https://us-south.functions.appdomain.cloud/api/v1/web/90a255d5-a3d1-4958-9023-9390b8c80688/dealership-package/get-dealership"
         dealerships = get_dealers_from_cf(url)
         # Concat all dealer's short name 
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
-        #return render(request, 'djangoapp/index.html', context)
+        context["dealership_list"]=dealerships
+        # return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
@@ -100,7 +101,7 @@ def get_dealer_details(request,dealer_id):
     context={}
     if request.method=="GET":
         url="https://us-south.functions.appdomain.cloud/api/v1/web/90a255d5-a3d1-4958-9023-9390b8c80688/dealership-package/get-review"
-        dealer_reviews = get_dealer_reviews_from_cf(url,dealer_id)
+        dealer_reviews = get_dealer_reviews_from_cf(url,int(dealer_id))
         # Concat all dealer's short name 
         #dealer_names = ' '.join([dealer.short_name for dealer in dealerreviews])
         # Return a list of dealer short name
@@ -118,11 +119,11 @@ def add_review(request,dealer_id):
     # password = request.POST['psw']
     # user = authenticate(username=username,password = password)
     if request.user.is_authenticated:
-        print("Go here")
+        #print("Go here")
         review=dict()
         #review["time"]=datetime.utcnow().isoformat()
-        review["dealership"]=int(dealer_id)
-        review['id']=1111
+        review["dealership"]=1234
+        review['id']=dealer_id
         review["review"]="This is a great car dealer"
         review["car_make"]= "Audi"
         review["car_model"]= "A6"
