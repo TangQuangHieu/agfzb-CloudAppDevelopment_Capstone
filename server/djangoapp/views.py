@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf,get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf,get_dealer_reviews_from_cf,post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -113,19 +113,32 @@ def get_dealer_details(request,dealer_id):
 # ...
 def add_review(request,dealer_id):
     context = {}
-    if request.method=="POST":
-        username = request.POST['username']
-        password = request.POST['psw']
-        user = authenticate(username=username,password = password)
-        if user is not None:
-            review=dict()
-            review["time"]=datetime.utcnow().isoformat()
-            review["delearship"]=dealer_id
-            review["review"]="This is a great car dealer"
-            json_payload=dict()
-            json_payload["review"]=review
-            url="https://us-south.functions.appdomain.cloud/api/v1/web/90a255d5-a3d1-4958-9023-9390b8c80688/dealership-package/get-review"
-            
-            return HTTPResponse(post_request(url,json_payload))
+    #if request.method=="POST":
+    # username = request.POST['username']
+    # password = request.POST['psw']
+    # user = authenticate(username=username,password = password)
+    if request.user.is_authenticated:
+        print("Go here")
+        review=dict()
+        #review["time"]=datetime.utcnow().isoformat()
+        review["dealership"]=int(dealer_id)
+        review['id']=1111
+        review["review"]="This is a great car dealer"
+        review["car_make"]= "Audi"
+        review["car_model"]= "A6"
+        review["car_year"]= 2010
+        #review["dealership"]= 15
+        review["name"]= "Hieu Tang"
+        review["purchase"]= True
+        review["purchase_date"]= "07/11/2020"
+        json_payload=dict()
+        json_payload["review"]=review
+        url="https://us-south.functions.appdomain.cloud/api/v1/web/90a255d5-a3d1-4958-9023-9390b8c80688/dealership-package/get-review"
+        
+        return HttpResponse(post_request(url,json_payload))
+    else:
+        context['message']="Only logged in users can post"
+        return render(request,'djangoapp/login.html',context)
+    
 
 
