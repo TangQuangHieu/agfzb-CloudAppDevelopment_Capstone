@@ -78,7 +78,7 @@ def get_request(url,dealerID=None,**kwargs):
     #print("GET from {}".format(url))
     if dealerID is not None:
         url="{}?dealerId={}".format(url,dealerID)
-    print("Full url: ",url)
+    #print("Full url: ",url)
     try:
         # Call get method of requests library with URL and parameters 
         response = requests.get(url, headers={'Content-Type':'application/json'},
@@ -105,7 +105,7 @@ def get_dealer_reviews_from_cf(url,dealerId):
             # Create a DealerView object with values in `doc` object 
             #         def __init__(self,dealership,name,purchase,
             # review,purchase_date,car_make,car_model,car_year,sentiment,id)
-            print(review)
+            #print(review)
             sentiment = analyze_review_sentiments(review['review'])
             review_obj = DealerView(dealership=review['dealership'],name=review['name'],
             purchase=review['purchase'],review=review['review'],purchase_date=review['purchase_date'],
@@ -130,7 +130,7 @@ def analyze_review_sentiments(text):
         authenticator=authenticator)
     natural_language_understanding.set_service_url(url)
     response = natural_language_understanding.analyze(
-        text=text,features=Features(sentiment=SentimentOptions())).get_result()
-    print(response)
+        text=text,features=Features(sentiment=SentimentOptions()),language='en').get_result()
+    #print(response)
     return response['sentiment']['document']['label']
 
