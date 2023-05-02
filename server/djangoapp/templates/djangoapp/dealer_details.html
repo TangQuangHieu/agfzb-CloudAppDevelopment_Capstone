@@ -4,15 +4,74 @@
     <meta charset="UTF-8">
     <title>Dealership Review</title>
     {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
     <body>
 
     <!--Add a nav bar here -->
-
+    <nav class="navbar navbar-light bg-light" style="background-color: 	#FACFC3;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Home</a>
+                <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="btn btn-link" href="#">{{user.first_name}}({{user.username}})</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Username" name="username">
+                            <input type="password" class="form-control" placeholder="Username" name="psw">
+                            <button class="btn btn-primary" type="submit">Login</button>
+                            <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                        </div>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <h2> Rewiew for {{dealer_name}}</h2>
     <!-- Add reviews as cards -->
-
+    <div class="row">
+            {% for review in review_list %}
+            <div class="col-sm-6">
+                <div class="card">
+                    {% ifequal review.sentiment "positive" %}
+                    <img class="card-img-left" style="max-width:5%;" src="{{MEDIA_URL}}/emoji/positive.png">
+                    {% endifequal %}
+                    {% ifequal review.sentiment "neutral" %}
+                    <img class="card-img-left" style="max-width:5%;" src="{{MEDIA_URL}}/emoji/neutral.png">
+                    {% endifequal %}
+                    {% ifequal review.sentiment "negative" %}
+                    <img class="card-img-left" style="max-width:5%;" src="{{MEDIA_URL}}/emoji/negative.png">
+                    {% endifequal %}
+                    <div class="card-body">
+                        <div class="card-title">
+                            <b>{{review.car_make}},{{review.car_model}}</b><br>
+                        </div>
+                        <div class="card-title">
+                            <b>{{review.car_year}}</b>
+                        </div>
+                        <div class="card-text">
+                            {{review.review}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
     </body>
 
 </html>
